@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчёт чистого дохода</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f4f7ff, #e3e9f4);
+            color: #333;
+            padding: 0;
+            height: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #4CAF50;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 28px;
+            color: #4CAF50;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .profit, .margin {
+            font-size: 28px;
+            font-weight: 600;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f4f7ff;
+            color: #333;
+        }
+
+        .profit {
+            color: #FF6347;
+            border-left: 5px solid #FF6347;
+        }
+
+        .margin {
+            color: #4682B4;
+            border-left: 5px solid #4682B4;
+        }
+
+        .amount {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .order-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .order-list li {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #4CAF50;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .order-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-list li h4 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .order-list li p {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #777;
+        }
+
+        .footer {
+            background: #4CAF50;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+
+        .footer p {
+            font-size: 16px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            .section h2 {
+                font-size: 24px;
+            }
+
+            .order-list li {
+                padding: 12px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Расчёт чистого дохода</h1>
+        </header>
+
+        <div class="section">
+            <h2>Чистый доход</h2>
+            <p class="profit">{{ net_profit }} ₽</p>
+        </div>
+
+        <div class="section">
+            <h2>Маржинальный доход</h2>
+            <p class="margin">{{ gross_profit }} ₽</p>
+        </div>
+
+        <div class="section">
+            <h2>Общая информация</h2>
+            <p class="amount">Общий доход от продаж: <strong>{{ total_revenue }} ₽</strong></p>
+            <p class="amount">Общая стоимость доставки: <strong>{{ total_shipping_cost }} ₽</strong></p>
+            <p class="amount">Общая комиссия Kaspi: <strong>{{ total_commission }} ₽</strong></p>
+        </div>
+
+        <div class="section">
+            <h2>Заказы</h2>
+            <ul class="order-list">
+                {% for order in orders %}
+                    <li>
+                        <h4>Заказ ID: {{ order['order_id'] }} | Клиент: {{ order['customer_name'] }}</h4>
+                        <p><strong>Товар:</strong> {{ order['items'][0]['item_name'] }} ({{ order['items'][0]['quantity'] }} шт.)</p>
+                        <p><strong>Цена:</strong> {{ order['items'][0]['price'] }} ₽</p>
+                        <p><strong>Себестоимость:</strong> {{ order['items'][0]['cost'] }} ₽</p>
+                        <p><strong>Скидка:</strong> {{ order['items'][0]['discount'] }} ₽</p>
+                        <p><strong>Стоимость доставки:</strong> {{ order['shipping_cost'] }} ₽</p>
+                        <p><strong>Комиссия Kaspi:</strong> {{ order['commission'] }} ₽</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <a href="#" class="btn">Сгенерировать отчёт</a>
+
+        <div class="footer">
+            <p>Все права защищены &copy; 2024</p>
+        </div>
+    </div>
+</body>
+</html>
